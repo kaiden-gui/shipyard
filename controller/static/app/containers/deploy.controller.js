@@ -61,7 +61,6 @@
         vm.request = {
             HostConfig: {
                 RestartPolicy: { Name: 'no' },
-                NetworkMode: 'bridge',
                 Links: [],
                 Binds: [],
                 Privileged: false,

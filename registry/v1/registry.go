@@ -249,10 +249,6 @@ func (client *RegistryClient) Repository(name string) (*Repository, error) {
 			layers = append(layers, *l)
 		}
 	}
-	var repoSize int64
-	if int64(len(tags)) > 0 {
-		repoSize = int64(size) / int64(len(tags))
-	}
 
 	return &Repository{
 		Name:       path.Join(r.Namespace, r.Repository),
@@ -260,6 +256,6 @@ func (client *RegistryClient) Repository(name string) (*Repository, error) {
 		Repository: r.Repository,
 		Tags:       tags,
 		Layers:     layers,
-		Size:       repoSize,
+		Size:       int64(size) / int64(len(tags)),
 	}, nil
 }

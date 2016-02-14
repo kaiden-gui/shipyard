@@ -10,7 +10,7 @@
             return {
                 list: function() {
                     var promise = $http
-                        .get('/images/json')
+                        .get('/images/json?all=1')
                         .then(function(response) {
                             return response.data;
                         });
