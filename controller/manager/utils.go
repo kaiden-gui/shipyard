@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/shipyard/shipyard"
+	"github.com/kaiden-gui/shipyard"
 )
 
 func getTLSConfig(caCert, sslCert, sslKey []byte) (*tls.Config, error) {

@@ -1,7 +1,7 @@
 package shipyard
 
 import (
-	registry "github.com/shipyard/shipyard/registry/v1"
+	registry "github.com/kaiden-gui/shipyard/registry/v1"
 )
 
 type Registry struct {

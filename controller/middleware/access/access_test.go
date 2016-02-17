@@ -3,8 +3,8 @@ package access
 import (
 	"testing"
 
-	"github.com/shipyard/shipyard/auth"
-	"github.com/shipyard/shipyard/controller/mock_test"
+	"github.com/kaiden-gui/shipyard/auth"
+	"github.com/kaiden-gui/shipyard/controller/mock_test"
 )
 
 var (

@@ -3,12 +3,12 @@ package commands
 import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/codegangsta/cli"
-	"github.com/shipyard/shipyard/auth/builtin"
-	"github.com/shipyard/shipyard/auth/ldap"
-	"github.com/shipyard/shipyard/controller/api"
-	"github.com/shipyard/shipyard/controller/manager"
-	"github.com/shipyard/shipyard/utils"
-	"github.com/shipyard/shipyard/version"
+	"github.com/kaiden-gui/shipyard/auth/builtin"
+	"github.com/kaiden-gui/shipyard/auth/ldap"
+	"github.com/kaiden-gui/shipyard/controller/api"
+	"github.com/kaiden-gui/shipyard/controller/manager"
+	"github.com/kaiden-gui/shipyard/utils"
+	"github.com/kaiden-gui/shipyard/version"
 )
 
 var (

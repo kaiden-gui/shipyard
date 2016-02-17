@@ -6,7 +6,7 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/gorilla/mux"
-	"github.com/shipyard/shipyard"
+	"github.com/kaiden-gui/shipyard"
 )
 
 func (a *Api) registries(w http.ResponseWriter, r *http.Request) {

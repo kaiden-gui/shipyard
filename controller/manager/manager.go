@@ -14,10 +14,10 @@ import (
 	r "github.com/dancannon/gorethink"
 	"github.com/gorilla/sessions"
 	"github.com/samalba/dockerclient"
-	"github.com/shipyard/shipyard"
-	"github.com/shipyard/shipyard/auth"
-	"github.com/shipyard/shipyard/dockerhub"
-	"github.com/shipyard/shipyard/version"
+	"github.com/kaiden-gui/shipyard"
+	"github.com/kaiden-gui/shipyard/auth"
+	"github.com/kaiden-gui/shipyard/dockerhub"
+	"github.com/kaiden-gui/shipyard/version"
 )
 
 const (

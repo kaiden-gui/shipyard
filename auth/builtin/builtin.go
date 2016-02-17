@@ -2,7 +2,7 @@ package builtin
 
 import (
 	"code.google.com/p/go.crypto/bcrypt"
-	"github.com/shipyard/shipyard/auth"
+	"github.com/kaiden-gui/shipyard/auth"
 )
 
 type (

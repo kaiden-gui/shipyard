@@ -3,11 +3,11 @@ package mock_test
 import (
 	"github.com/gorilla/sessions"
 	"github.com/samalba/dockerclient"
-	"github.com/shipyard/shipyard"
-	"github.com/shipyard/shipyard/auth"
-	"github.com/shipyard/shipyard/controller/manager"
-	"github.com/shipyard/shipyard/dockerhub"
-	registry "github.com/shipyard/shipyard/registry/v1"
+	"github.com/kaiden-gui/shipyard"
+	"github.com/kaiden-gui/shipyard/auth"
+	"github.com/kaiden-gui/shipyard/controller/manager"
+	"github.com/kaiden-gui/shipyard/dockerhub"
+	registry "github.com/kaiden-gui/shipyard/registry/v1"
 )
 
 type MockManager struct{}

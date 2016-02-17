@@ -7,7 +7,7 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/gorilla/mux"
 	"github.com/nu7hatch/gouuid"
-	"github.com/shipyard/shipyard"
+	"github.com/kaiden-gui/shipyard"
 )
 
 func (a *Api) createConsoleSession(w http.ResponseWriter, r *http.Request) {

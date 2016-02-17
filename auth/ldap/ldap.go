@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/shipyard/shipyard/auth"
+	"github.com/kaiden-gui/shipyard/auth"
 	goldap "gopkg.in/ldap.v1"
 )
 

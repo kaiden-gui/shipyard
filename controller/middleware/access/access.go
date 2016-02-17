@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/shipyard/shipyard/auth"
-	"github.com/shipyard/shipyard/controller/manager"
+	"github.com/kaiden-gui/shipyard/auth"
+	"github.com/kaiden-gui/shipyard/controller/manager"
 )
 
 var (
