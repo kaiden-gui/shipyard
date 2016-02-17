@@ -52,10 +52,10 @@
     <table class="ui sortable celled table">
         <thead ng-hide="">
             <tr>
-                <th>Namespace</th>
+                <!-- <th>Namespace</th> -->
                 <th>Repository</th>
                 <th>Tags</th>
-                <th>Layers</th>
+                <!-- <th>Layers</th> -->
                 <th>Size</th>
                 <th></th>
             </tr>
@@ -64,7 +64,7 @@
             <tr ng-repeat="r in vm.repositories | filter:tableFilter">
                 <!-- <td>{{r.namespace}}</td> -->
                 <td>{{r.name}}</td>
-                <td>{{r.tags}}</td>
+                <td>{{r.tag}}</td>
                 <!-- <td>{{r.layers.length}}</td> -->
                 <td>{{r.size / 1048576 | number:2}} MB</td>
                 <td class="collapsing">

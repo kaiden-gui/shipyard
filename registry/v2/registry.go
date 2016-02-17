@@ -12,6 +12,8 @@ import (
 	"net/url"
 	"strings"
 	"time"
+	log "github.com/Sirupsen/logrus"
+
 )
 
 var (
@@ -102,6 +104,7 @@ func (client *RegistryClient) Search(query string) ([]*Repository, error) {
 
 	uri := fmt.Sprintf("/_catalog")
 	data, _, err := client.doRequest("GET", uri, nil, nil)
+	log.Debugf("catalog %s:",data)
 	if err != nil {
 		return nil, err
 	}
@@ -122,8 +125,11 @@ func (client *RegistryClient) Search(query string) ([]*Repository, error) {
 
 			uri := fmt.Sprintf("/%s/tags/list", k)
 			data, _, err := client.doRequest("GET", uri, nil, nil)
+			log.Debugf("tag data:%s",data)
 			if err != nil {
-				return nil, err
+				//return nil, err
+				log.Errorf("error to get tag of %s: %s",k,err)
+				continue
 			}
 
 			tl := &tagList{}
@@ -186,6 +192,6 @@ func (client *RegistryClient) Repository(name, tag string) (*Repository, error) 
 		return nil, err
 	}
 
-	//repo.Digest = hdr.Get("Docker-Content-Digest")
+	repo.Digest = hdr.Get("Docker-Content-Digest")
 	return repo, nil
 }

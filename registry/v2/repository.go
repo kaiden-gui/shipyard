@@ -34,7 +34,7 @@ type (
 
 	Repository struct {
 		SchemaVersion int         `json:"schemaVersion,omitempty"`
-		//Digest        string      `json:"digest,omitempty"`
+		Digest        string      `json:"digest,omitempty"`
 		Name          string      `json:"name"`
 		Tag           string      `json:"tag"`
 		//Architecture  string      `json:"architecture"`
