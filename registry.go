@@ -26,12 +26,12 @@ func NewRegistry(id, name, addr string) (*Registry, error) {
 }
 
 func (r *Registry) Repositories() ([]*registry.Repository, error) {
-	res, err := r.registryClient.Search("", 1, 100)
+	res, err := r.registryClient.Search("")
 	if err != nil {
 		return nil, err
 	}
 
-	return res.Results, nil
+	return res, nil
 }
 
 func (r *Registry) Repository(name string) (*registry.Repository, error) {
