@@ -35,7 +35,7 @@ func (r *Registry) Repositories() ([]*registry.Repository, error) {
 }
 
 func (r *Registry) Repository(name string) (*registry.Repository, error) {
-	return r.registryClient.Repository(name)
+	return r.registryClient.Repository(name,"")
 }
 
 func (r *Registry) DeleteRepository(name string) error {

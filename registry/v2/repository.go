@@ -7,6 +7,7 @@ type (
 		Name string
 	}
 
+/*
 	FsLayer struct {
 		BlobSum string `json:"blobSum"`
 	}
@@ -29,14 +30,16 @@ type (
 		Signature string `json:"signature`
 		Protected string `json:"protected"`
 	}
+*/
 
 	Repository struct {
 		SchemaVersion int         `json:"schemaVersion,omitempty"`
-		Digest        string      `json:"digest,omitempty"`
+		//Digest        string      `json:"digest,omitempty"`
 		Name          string      `json:"name"`
 		Tag           string      `json:"tag"`
-		Architecture  string      `json:"architecture"`
-		FsLayers      []FsLayer   `json:"fsLayers"`
-		Signatures    []Signature `json:"signatures"`
+		//Architecture  string      `json:"architecture"`
+		//FsLayers      []FsLayer   `json:"fsLayers"`
+		//Signatures    []Signature `json:"signatures"`
+		Size        int64   `json:"size,omitempty"`
 	}
 )

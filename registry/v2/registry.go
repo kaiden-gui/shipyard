@@ -186,6 +186,6 @@ func (client *RegistryClient) Repository(name, tag string) (*Repository, error) 
 		return nil, err
 	}
 
-	repo.Digest = hdr.Get("Docker-Content-Digest")
+	//repo.Digest = hdr.Get("Docker-Content-Digest")
 	return repo, nil
 }
