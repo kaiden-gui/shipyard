@@ -192,6 +192,25 @@ func (client *RegistryClient) Repository(name, tag string) (*Repository, error) 
 		return nil, err
 	}
 
+// by kaiden 20160218
+// to get repository size
+	type Size struct {
+		Size        int64   `json:"size,omitempty"`
+	}
+	type History struct {
+		History        []String   `json:"history,omitempty"`
+	}
+	histry := &History{}
+	if err := json.Unmarshal(data, &histry); err != nil {
+		return nil, err
+	}
+	for _, i := range &histry {
+		if err = json.Unmarshal(i, &Size); err != nil {
+			return nil, err
+		}
+		repo.Size += Size.Size
+	}
+
 	repo.Digest = hdr.Get("Docker-Content-Digest")
 	return repo, nil
 }
