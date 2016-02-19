@@ -13,6 +13,7 @@ import (
 	"strings"
 	"time"
 	log "github.com/Sirupsen/logrus"
+	simplejson "github.com/bitly/go-simplejson"
 
 )
 
@@ -189,28 +190,25 @@ func (client *RegistryClient) Repository(name, tag string) (*Repository, error) 
 
 	repo := &Repository{}
 	if err := json.Unmarshal(data, &repo); err != nil {
+		log.Errorf("repo err data:%s",err)
 		return nil, err
 	}
 
-// by kaiden 20160218
-// to get repository size
-	type Size struct {
-		Size        int64   `json:"size,omitempty"`
-	}
-	type History struct {
-		History        []String   `json:"history,omitempty"`
-	}
-	histry := &History{}
-	if err := json.Unmarshal(data, &histry); err != nil {
-		return nil, err
-	}
-	for _, i := range &histry {
-		if err = json.Unmarshal(i, &Size); err != nil {
-			return nil, err
-		}
-		repo.Size += Size.Size
+	// to get repository size
+        j, _ := simplejson.NewJson([]byte(data))
+        history,_ := j.Get("history").Array()
+        //log.Debugf("history data:%s",history)
+        for _, h := range history{
+                v1,_ := h.(map[string]interface{})["v1Compatibility"]
+		vs := v1.(string)
+
+		vj, _ := simplejson.NewJson([]byte(vs))
+                vz,_ := vj.Get("Size").Int64()
+		repo.Size += vz
+                //log.Debugf("each size:%s",vz)
 	}
 
+	log.Debugf("repository data:%s",repo)
 	repo.Digest = hdr.Get("Docker-Content-Digest")
 	return repo, nil
 }

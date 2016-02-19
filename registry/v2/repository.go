@@ -31,7 +31,6 @@ type (
 		Protected string `json:"protected"`
 	}
 */
-
 	Repository struct {
 		SchemaVersion int         `json:"schemaVersion,omitempty"`
 		Digest        string      `json:"digest,omitempty"`
@@ -40,6 +39,7 @@ type (
 		//Architecture  string      `json:"architecture"`
 		//FsLayers      []FsLayer   `json:"fsLayers"`
 		//Signatures    []Signature `json:"signatures"`
+		//History     []V1Compatibility   `json:"history,omitempty"`
 		Size        int64   `json:"size,omitempty"`
 	}
 )
