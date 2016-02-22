@@ -20,6 +20,7 @@ import (
 var (
 	ErrNotFound        = errors.New("Not found")
 	defaultHTTPTimeout = 30 * time.Second
+	quit chan int
 )
 
 type RegistryClient struct {
@@ -116,47 +117,57 @@ func (client *RegistryClient) Search(query string) ([]*Repository, error) {
 	}
 
 	repos := []*Repository{}
+	quit = make(chan int)
 
 	// simple filter for list
 	for _, k := range res.Repositories {
 		// concurrency
-		go GetTags()
+		go client.GetTags(k, query, &repos)
+	}
+	for range res.Repositories {
+		<- quit
 	}
 
+	//log.Debugf("repos all data:%s",repos)
 	return repos, nil
 }
 
 //get tags and manifests
-func (client *RegistryClient)GetTags(k string , repos &repos) error{
+func (client *RegistryClient) GetTags(k string, query string, repos *[]*Repository) error {
 	if strings.Index(k, query) == 0 {
 		type tagList struct {
 			Tags []string `json:"tags"`
 		}
+		log.Debugf("repo:%s",k)
 
 		uri := fmt.Sprintf("/%s/tags/list", k)
 		data, _, err := client.doRequest("GET", uri, nil, nil)
-		//log.Debugf("tag data:%s",data)
+		log.Debugf("tag data:%s",data)
 		if err != nil {
-			//return nil, err
 			log.Errorf("error to get tag of %s: %s",k,err)
-			continue
+			quit <- 0
+			return  err
+			//continue
 		}
 
 		tl := &tagList{}
 		if err := json.Unmarshal(data, &tl); err != nil {
-			return nil, err
+			return  err
 		}
 
 		for _, t := range tl.Tags {
 			// get the repository and append to the slice
 			r, err := client.Repository(k, t)
 			if err != nil {
-				return nil, err
+				return err
 			}
+			log.Debugf("repo data:%s",r)
 
-			repos = append(repos, r)
+			*repos = append(*repos, r)
 		}
 	}
+	quit <- 0
+	return nil
 }
 
 func (client *RegistryClient) DeleteRepository(repo string, tag string) error {
@@ -208,17 +219,17 @@ func (client *RegistryClient) Repository(name, tag string) (*Repository, error) 
 	}
 
 	// to get repository size
-  j, _ := simplejson.NewJson([]byte(data))
-  history,_ := j.Get("history").Array()
-  //log.Debugf("history data:%s",history)
-  for _, h := range history{
-  	v1,_ := h.(map[string]interface{})["v1Compatibility"]
+	j, _ := simplejson.NewJson([]byte(data))
+	history,_ := j.Get("history").Array()
+	//log.Debugf("history data:%s",history)
+	for _, h := range history{
+		v1,_ := h.(map[string]interface{})["v1Compatibility"]
 		vs := v1.(string)
 		vj, _ := simplejson.NewJson([]byte(vs))
-    vz,_ := vj.Get("Size").Int64()
+		vz,_ := vj.Get("Size").Int64()
 		repo.Size += vz
-    //log.Debugf("each size:%s",vz)
-	}
+	    	//log.Debugf("each size:%s",vz)
+		}
 
 	//log.Debugf("repository data:%s",repo)
 	repo.Digest = hdr.Get("Docker-Content-Digest")
