@@ -119,38 +119,44 @@ func (client *RegistryClient) Search(query string) ([]*Repository, error) {
 
 	// simple filter for list
 	for _, k := range res.Repositories {
-		if strings.Index(k, query) == 0 {
-			type tagList struct {
-				Tags []string `json:"tags"`
-			}
-
-			uri := fmt.Sprintf("/%s/tags/list", k)
-			data, _, err := client.doRequest("GET", uri, nil, nil)
-			log.Debugf("tag data:%s",data)
-			if err != nil {
-				//return nil, err
-				log.Errorf("error to get tag of %s: %s",k,err)
-				continue
-			}
-
-			tl := &tagList{}
-			if err := json.Unmarshal(data, &tl); err != nil {
-				return nil, err
-			}
-
-			for _, t := range tl.Tags {
-				// get the repository and append to the slice
-				r, err := client.Repository(k, t)
-				if err != nil {
-					return nil, err
-				}
-
-				repos = append(repos, r)
-			}
-		}
+		// concurrency
+		go GetTags()
 	}
 
 	return repos, nil
+}
+
+//get tags and manifests
+func (client *RegistryClient)GetTags(k string , repos &repos) error{
+	if strings.Index(k, query) == 0 {
+		type tagList struct {
+			Tags []string `json:"tags"`
+		}
+
+		uri := fmt.Sprintf("/%s/tags/list", k)
+		data, _, err := client.doRequest("GET", uri, nil, nil)
+		//log.Debugf("tag data:%s",data)
+		if err != nil {
+			//return nil, err
+			log.Errorf("error to get tag of %s: %s",k,err)
+			continue
+		}
+
+		tl := &tagList{}
+		if err := json.Unmarshal(data, &tl); err != nil {
+			return nil, err
+		}
+
+		for _, t := range tl.Tags {
+			// get the repository and append to the slice
+			r, err := client.Repository(k, t)
+			if err != nil {
+				return nil, err
+			}
+
+			repos = append(repos, r)
+		}
+	}
 }
 
 func (client *RegistryClient) DeleteRepository(repo string, tag string) error {
@@ -214,7 +220,7 @@ func (client *RegistryClient) Repository(name, tag string) (*Repository, error) 
     //log.Debugf("each size:%s",vz)
 	}
 
-	log.Debugf("repository data:%s",repo)
+	//log.Debugf("repository data:%s",repo)
 	repo.Digest = hdr.Get("Docker-Content-Digest")
 	return repo, nil
 }
