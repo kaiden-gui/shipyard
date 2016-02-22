@@ -127,6 +127,7 @@ func (a *Api) deleteRepository(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	name := vars["name"]
 	repoName := vars["repo"]
+	tag := vars["tag"]
 
 	registry, err := a.manager.Registry(name)
 	if err != nil {
@@ -134,7 +135,7 @@ func (a *Api) deleteRepository(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := registry.DeleteRepository(repoName); err != nil {
+	if err := registry.DeleteRepository(repoName, tag); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

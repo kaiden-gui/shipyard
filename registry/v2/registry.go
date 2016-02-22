@@ -153,16 +153,22 @@ func (client *RegistryClient) Search(query string) ([]*Repository, error) {
 	return repos, nil
 }
 
-func (client *RegistryClient) DeleteRepository(repo string) error {
-	//uri := fmt.Sprintf("/repositories/%s/%s/", r.Namespace, r.Repository)
-	//if _, _, err := client.doRequest("DELETE", uri, nil, nil); err != nil {
-	//	return err
-	//}
+func (client *RegistryClient) DeleteRepository(repo string, tag string) error {
+	r, err := client.Repository(repo, tag)
+	if err != nil {
+		return err
+	}
+
+
+	uri := fmt.Sprintf("/%s/manifests/%s", repo, r.Digest)
+	if _, _, err := client.doRequest("DELETE", uri, nil, nil); err != nil {
+		return err
+	}
 
 	return nil
 }
 
-func (client *RegistryClient) DeleteTag(repo string, tag string) error {
+/*func (client *RegistryClient) DeleteTag(repo string, tag string) error {
 	r, err := client.Repository(repo, tag)
 	if err != nil {
 		return err
@@ -175,6 +181,7 @@ func (client *RegistryClient) DeleteTag(repo string, tag string) error {
 
 	return nil
 }
+*/
 
 func (client *RegistryClient) Repository(name, tag string) (*Repository, error) {
 	if tag == "" {
@@ -195,17 +202,16 @@ func (client *RegistryClient) Repository(name, tag string) (*Repository, error) 
 	}
 
 	// to get repository size
-        j, _ := simplejson.NewJson([]byte(data))
-        history,_ := j.Get("history").Array()
-        //log.Debugf("history data:%s",history)
-        for _, h := range history{
-                v1,_ := h.(map[string]interface{})["v1Compatibility"]
+  j, _ := simplejson.NewJson([]byte(data))
+  history,_ := j.Get("history").Array()
+  //log.Debugf("history data:%s",history)
+  for _, h := range history{
+  	v1,_ := h.(map[string]interface{})["v1Compatibility"]
 		vs := v1.(string)
-
 		vj, _ := simplejson.NewJson([]byte(vs))
-                vz,_ := vj.Get("Size").Int64()
+    vz,_ := vj.Get("Size").Int64()
 		repo.Size += vz
-                //log.Debugf("each size:%s",vz)
+    //log.Debugf("each size:%s",vz)
 	}
 
 	log.Debugf("repository data:%s",repo)

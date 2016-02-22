@@ -38,6 +38,6 @@ func (r *Registry) Repository(name string) (*registry.Repository, error) {
 	return r.registryClient.Repository(name,"")
 }
 
-func (r *Registry) DeleteRepository(name string) error {
-	return r.registryClient.DeleteRepository(name)
+func (r *Registry) DeleteRepository(name string, tag string) error {
+	return r.registryClient.DeleteRepository(name, tag)
 }

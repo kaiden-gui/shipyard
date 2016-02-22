@@ -50,12 +50,12 @@
             },
             removeRepository: function(name, repo) {
                 var promise = $http
-                    .delete('/api/registries/'+name+'/repositories/'+repo.namespace+'/'+repo.repository)
+                    .delete('/api/registries/'+name+'/repositories/'+repo.name+':'+repo.tag)
                     .then(function(response) {
                         return response.data;
                     });
                 return promise;
             },
-        } 
+        }
     }
 })();
