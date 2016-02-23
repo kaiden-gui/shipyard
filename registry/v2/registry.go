@@ -21,6 +21,7 @@ var (
 	ErrNotFound        = errors.New("Not found")
 	defaultHTTPTimeout = 30 * time.Second
 	quit chan int
+	quit1 chan int
 )
 
 type RegistryClient struct {
@@ -106,7 +107,7 @@ func (client *RegistryClient) Search(query string) ([]*Repository, error) {
 
 	uri := fmt.Sprintf("/_catalog")
 	data, _, err := client.doRequest("GET", uri, nil, nil)
-	log.Debugf("catalog %s:",data)
+	//log.Debugf("catalog %s:",data)
 	if err != nil {
 		return nil, err
 	}
@@ -122,18 +123,19 @@ func (client *RegistryClient) Search(query string) ([]*Repository, error) {
 	// simple filter for list
 	for _, k := range res.Repositories {
 		// concurrency
-		go client.GetTags(k, query, &repos)
+		go client.GetRepo(k, query, &repos)
 	}
 	for range res.Repositories {
 		<- quit
 	}
 
+	close(quit)
 	//log.Debugf("repos all data:%s",repos)
 	return repos, nil
 }
 
 //get tags and manifests
-func (client *RegistryClient) GetTags(k string, query string, repos *[]*Repository) error {
+func (client *RegistryClient) GetRepo(k string, query string, repos *[]*Repository) error {
 	if strings.Index(k, query) == 0 {
 		type tagList struct {
 			Tags []string `json:"tags"`
@@ -159,17 +161,17 @@ func (client *RegistryClient) GetTags(k string, query string, repos *[]*Reposito
 			// get the repository and append to the slice
 			r, err := client.Repository(k, t)
 			if err != nil {
+				log.Errorf("error to get manifest of %s: %s",k,err)
 				return err
 			}
-			log.Debugf("repo data:%s",r)
-
+			//log.Debugf("repo data:%s",r)
 			*repos = append(*repos, r)
+			//log.Debugf("*repos data:%s",*repos)
 		}
 	}
 	quit <- 0
 	return nil
 }
-
 func (client *RegistryClient) DeleteRepository(repo string, tag string) error {
 	r, err := client.Repository(repo, tag)
 	if err != nil {
