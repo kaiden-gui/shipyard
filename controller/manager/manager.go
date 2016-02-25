@@ -31,7 +31,7 @@ const (
 	tblNameRegistries  = "registries"
 	tblNameConsole     = "console"
 	storeKey           = "shipyard"
-	trackerHost        = "http://tracker.shipyard-project.com"
+//	trackerHost        = "http://tracker.shipyard-project.com"
 	NodeHealthUp       = "up"
 	NodeHealthDown     = "down"
 )
@@ -138,7 +138,7 @@ func NewManager(addr string, database string, authKey string, client *dockerclie
 		disableUsageInfo: disableUsageInfo,
 	}
 	m.initdb()
-	m.init()
+	//m.init()
 	return m, nil
 }
 
@@ -186,6 +186,8 @@ func (m DefaultManager) logEvent(eventType, message string, tags []string) {
 	}
 }
 
+//disable uploadUsage
+/*
 func (m DefaultManager) usageReport() {
 	if m.disableUsageInfo {
 		return
@@ -225,6 +227,7 @@ func (m DefaultManager) uploadUsage() {
 		log.Warnf("error sending usage info: %s", err)
 	}
 }
+*/
 
 func (m DefaultManager) Container(id string) (*dockerclient.ContainerInfo, error) {
 	return m.client.InspectContainer(id)

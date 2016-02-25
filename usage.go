@@ -1,5 +1,7 @@
 package shipyard
 
+//disable Usage
+/*
 type (
 	Usage struct {
 		ID              string  `json:"id,omitempty"`
@@ -11,3 +13,4 @@ type (
 		TotalMemory     float64 `json:"total_memory,omitempty"`
 	}
 )
+*/
