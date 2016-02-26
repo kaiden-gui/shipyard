@@ -1,11 +1,11 @@
 package manager
 
 import (
-	"bytes"
-	"encoding/json"
+	//"bytes"
+	//"encoding/json"
 	"errors"
 	"fmt"
-	"net"
+	//"net"
 	"net/http"
 	"strings"
 	"time"
@@ -17,7 +17,7 @@ import (
 	"github.com/kaiden-gui/shipyard"
 	"github.com/kaiden-gui/shipyard/auth"
 	"github.com/kaiden-gui/shipyard/dockerhub"
-	"github.com/kaiden-gui/shipyard/version"
+	//"github.com/kaiden-gui/shipyard/version"
 )
 
 const (
@@ -105,8 +105,8 @@ type (
 		Node(name string) (*shipyard.Node, error)
 
 		AddApp(app *shipyard.App) error
-		RemoveApp(app *shipyard.App) error
-		Apps() ([]*shipyard.App, error)
+		RemoveApp(appid string) error
+		Apps(username string) ([]*shipyard.App, error)
 
 		AddRegistry(registry *shipyard.Registry) error
 		RemoveRegistry(registry *shipyard.Registry) error
@@ -173,11 +173,11 @@ func (m DefaultManager) initdb() {
 	}
 }
 
-func (m DefaultManager) init() error {
+/*func (m DefaultManager) init() error {
 	// anonymous usage info
 	go m.usageReport()
 	return nil
-}
+}*/
 
 func (m DefaultManager) logEvent(eventType, message string, tags []string) {
 	evt := &shipyard.Event{
@@ -782,18 +782,21 @@ func (m DefaultManager) Registry(name string) (*shipyard.Registry, error) {
 }
 
 func (m DefaultManager) Apps(username string) ([]*shipyard.App, error) {
-	account,err := m.Account(username string)
 	apps := []*shipyard.App{}
-	res  := []*shipyard.App{}
-	for app,_ := range account.Apps{
-		re, err := r.Table(tblNameApps).Filter(map[string]string{"apps": app}).Run(m.session)
+	var app *shipyard.App
+	account,err := m.Account(username)
+	if err != nil {
+                return nil, err
+        }
+	for _,ap := range account.Apps{
+		re, err := r.Table(tblNameApps).Filter(map[string]string{"apps": ap}).Run(m.session)
 		if err != nil {
 			return nil, err
 		}
-		res.append(res, re)
-	}
-	if err := res.All(&apps); err != nil {
+		if err := re.One(&app); err != nil {
 		return nil, err
+		}
+		apps = append(apps, app)
 	}
 	return apps, nil
 }
@@ -812,11 +815,11 @@ func (m DefaultManager) AddApp(app *shipyard.App) error {
 	}
 
 	m.logEvent("add-registry", fmt.Sprintf("name=%s endpoint=%s", registry.Name, registry.Addr), []string{"registry"})
-
-	return nil*/
+	*/
+	return nil
 }
-func (m DefaultManager) RemoveApp(app *shipyard.App) error {
-	res, err := r.Table(tblNameApps).Get(app.ID).Delete().Run(m.session)
+func (m DefaultManager) RemoveApp(appid string) error {
+	res, err := r.Table(tblNameApps).Get(appid).Delete().Run(m.session)
 	if err != nil {
 		return err
 	}
@@ -825,7 +828,7 @@ func (m DefaultManager) RemoveApp(app *shipyard.App) error {
 		return ErrAppDoesNotExist
 	}
 
-	m.logEvent("delete-app", fmt.Sprintf("name=%s endpoint=%s", app.Name, app.Addr), []string{"app"})
+	m.logEvent("delete-app", fmt.Sprintf("name=%s", appid, ), []string{"app"})
 
 	return nil
 }

@@ -3,8 +3,12 @@ package api
 import (
 	"encoding/json"
 	"net/http"
-
+	
 	"github.com/gorilla/mux"
+	"github.com/kaiden-gui/shipyard"
+	log "github.com/Sirupsen/logrus"
+	
+
 )
 
 func (a *Api) apps(w http.ResponseWriter, r *http.Request) {
@@ -37,17 +41,11 @@ func (a *Api) addapp(w http.ResponseWriter, r *http.Request) {
 	log.Infof("added app: name=%s", app.Name)
 	w.WriteHeader(http.StatusNoContent)
 }
-func (a *Api) removeApp(w http.ResponseWriter, r *http.Request) {
+func (a *Api) removeapp(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	name := vars["name"]
+	appid := vars["appid"]
 
-	app, err := a.manager.App(name)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	if err := a.manager.RemoveApp(app); err != nil {
+	if err := a.manager.RemoveApp(appid); err != nil {
 		log.Errorf("error deleting app: %s", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
