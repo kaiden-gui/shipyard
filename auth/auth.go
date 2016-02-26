@@ -22,6 +22,7 @@ type (
 		Password  string       `json:"password,omitempty" gorethink:"password"`
 		Tokens    []*AuthToken `json:"-" gorethink:"tokens"`
 		Roles     []string     `json:"roles,omitempty" gorethink:"roles"`
+		Apps      []string     `json:"apps,omitempty" gorethink:"apps"`
 	}
 
 	AuthToken struct {

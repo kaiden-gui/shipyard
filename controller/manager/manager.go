@@ -29,6 +29,7 @@ const (
 	tblNameExtensions  = "extensions"
 	tblNameWebhookKeys = "webhook_keys"
 	tblNameRegistries  = "registries"
+	tblNameApps        = "apps"
 	tblNameConsole     = "console"
 	storeKey           = "shipyard"
 //	trackerHost        = "http://tracker.shipyard-project.com"
@@ -46,6 +47,7 @@ var (
 	ErrExtensionDoesNotExist      = errors.New("extension does not exist")
 	ErrWebhookKeyDoesNotExist     = errors.New("webhook key does not exist")
 	ErrRegistryDoesNotExist       = errors.New("registry does not exist")
+	ErrAppDoesNotExist      	  = errors.New("app does not exist")
 	ErrConsoleSessionDoesNotExist = errors.New("console session does not exist")
 	store                         = sessions.NewCookieStore([]byte(storeKey))
 )
@@ -102,6 +104,10 @@ type (
 		Nodes() ([]*shipyard.Node, error)
 		Node(name string) (*shipyard.Node, error)
 
+		AddApp(app *shipyard.App) error
+		RemoveApp(app *shipyard.App) error
+		Apps() ([]*shipyard.App, error)
+
 		AddRegistry(registry *shipyard.Registry) error
 		RemoveRegistry(registry *shipyard.Registry) error
 		Registries() ([]*shipyard.Registry, error)
@@ -156,7 +162,7 @@ func (m DefaultManager) StoreKey() string {
 
 func (m DefaultManager) initdb() {
 	// create tables if needed
-	tables := []string{tblNameConfig, tblNameEvents, tblNameAccounts, tblNameRoles, tblNameConsole, tblNameServiceKeys, tblNameRegistries, tblNameExtensions, tblNameWebhookKeys}
+	tables := []string{tblNameConfig, tblNameEvents, tblNameAccounts, tblNameRoles, tblNameConsole, tblNameServiceKeys, tblNameRegistries, tblNameApps, tblNameExtensions, tblNameWebhookKeys}
 	for _, tbl := range tables {
 		_, err := r.Table(tbl).Run(m.session)
 		if err != nil {
@@ -773,6 +779,55 @@ func (m DefaultManager) Registry(name string) (*shipyard.Registry, error) {
 	}
 
 	return registry, nil
+}
+
+func (m DefaultManager) Apps(username string) ([]*shipyard.App, error) {
+	account,err := m.Account(username string)
+	apps := []*shipyard.App{}
+	res  := []*shipyard.App{}
+	for app,_ := range account.Apps{
+		re, err := r.Table(tblNameApps).Filter(map[string]string{"apps": app}).Run(m.session)
+		if err != nil {
+			return nil, err
+		}
+		res.append(res, re)
+	}
+	if err := res.All(&apps); err != nil {
+		return nil, err
+	}
+	return apps, nil
+}
+
+func (m DefaultManager) AddApp(app *shipyard.App) error {
+	/*resp, err := http.Get(fmt.Sprintf("%s/v2/", registry.Addr))
+	if err != nil {
+		return err
+	}
+	if resp.StatusCode != 200 {
+		return errors.New(resp.Status)
+	}
+
+	if _, err := r.Table(tblNameRegistries).Insert(registry).RunWrite(m.session); err != nil {
+		return err
+	}
+
+	m.logEvent("add-registry", fmt.Sprintf("name=%s endpoint=%s", registry.Name, registry.Addr), []string{"registry"})
+
+	return nil*/
+}
+func (m DefaultManager) RemoveApp(app *shipyard.App) error {
+	res, err := r.Table(tblNameApps).Get(app.ID).Delete().Run(m.session)
+	if err != nil {
+		return err
+	}
+
+	if res.IsNil() {
+		return ErrAppDoesNotExist
+	}
+
+	m.logEvent("delete-app", fmt.Sprintf("name=%s endpoint=%s", app.Name, app.Addr), []string{"app"})
+
+	return nil
 }
 
 func (m DefaultManager) CreateConsoleSession(c *shipyard.ConsoleSession) error {

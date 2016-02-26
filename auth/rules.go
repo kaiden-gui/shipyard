@@ -1,5 +1,6 @@
 package auth
 
+import github.com/kaiden-gui/shipyard/controller/manager
 type (
 	ACL struct {
 		RoleName    string        `json:"role_name,omitempty"`
@@ -147,5 +148,16 @@ func DefaultACLs() []*ACL {
 	}
 	acls = append(acls, registriesACLRW)
 
+	appsACLRW := &ACL{
+		RoleName:    "app:rw",
+		Description: "apps",
+		Rules: []*AccessRule{
+			{
+				Path:    "/apps",
+				Methods: []string{"GET", "POST", "DELETE"},
+			},
+		},
+	}
+	acls = append(acls, registriesACLRW)
 	return acls
 }
