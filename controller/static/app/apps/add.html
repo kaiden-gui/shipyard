@@ -1,0 +1,57 @@
+<div class="ui padded grid">
+<div class="row">
+    <div class="column">
+        <div class="ui segment">
+            <div class="ui form" ng-submit="vm.addApp()" ng-method="post">
+                <h4 class="ui dividing header">App Details</h4>
+                <label>App Name</label>
+                <div class="field">
+                    <input type="text" name="appName" ng-model="vm.appName">
+                </div>
+                <label>Container Label</label>
+                <div class="field">
+                    <input type="text" name="label" ng-model="vm.label">
+                </div>
+                <label>Owner</label>
+                <div class="field">
+                    <selectize options="vm.roleOptions" ng-model="vm.owner" config="vm.ownerConfig"></selectize>
+                </div>
+                <div class="ui hidden divider"></div>
+                <div class="ui green submit button">Add App</div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+$(function(){
+    $('.ui.form')
+        .form({
+            onSuccess: function() {
+                vm.addApp();
+            },
+            username: {
+                identifier : 'appName',
+                rules: [
+                {
+                    type   : 'empty',
+                    prompt : 'Please enter a App name'
+                }
+                ]
+            },
+            firstName: {
+                identifier : 'label',
+                rules: [
+                {
+                    type   : 'empty',
+                    prompt : 'Please enter a container label'
+                }
+                ]
+            }
+        });
+
+    $('.ui.checkbox').checkbox();
+});
+
+$('.ui.dropdown').dropdown();
+</script>

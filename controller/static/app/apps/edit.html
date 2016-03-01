@@ -2,8 +2,8 @@
 <div class="row">
     <div class="column">
         <div class="ui segment">
-            <div class="ui form" ng-submit="vm.editAccount()" ng-method="post">
-                <h4 class="ui dividing header">Account Details</h4>
+            <div class="ui form" ng-submit="vm.editApp()" ng-method="post">
+                <h4 class="ui dividing header">App Details</h4>
                 <label>First Name</label>
                 <div class="field">
                     <input type="text" name="firstName" ng-model="vm.firstName">
@@ -21,7 +21,7 @@
                     <selectize options="vm.roleOptions" ng-model="vm.userRoles" config="vm.roleConfig"></selectize>
                 </div>
                 <div class="ui hidden divider"></div>
-                <div class="ui green submit button">Update Account</div>
+                <div class="ui green submit button">Update App</div>
             </div>
         </div>
     </div>
@@ -32,7 +32,7 @@ $(function(){
     $('.ui.form')
         .form({
             onSuccess: function() {
-                vm.editAccount();
+                vm.editApp();
             },
             firstName: {
                 identifier : 'firstName',

@@ -2,21 +2,21 @@
 	'use strict';
 
 	angular
-    	    .module('shipyard.accounts')
-            .factory('AccountsService', AccountsService);
+    	    .module('shipyard.apps')
+            .factory('AppsService', AppsService);
 
-	AccountsService.$inject = ['$http'];
-        function AccountsService($http) {
+	AppsService.$inject = ['$http'];
+        function AppsService($http) {
             return {
                 list: function() {
                     var promise = $http
-                        .get('/api/accounts')
+                        .get('/api/apps')
                         .then(function(response) {
                             return response.data;
                         });
                     return promise;
                 },
-                roles: function() {
+		roles: function() {
                     var promise = $http
                         .get('/api/roles')
                         .then(function(response) {
@@ -32,17 +32,17 @@
                         });
                     return promise;
                 },
-                getAccount: function(username) {
+                getApp: function(username) {
                     var promise = $http
-                        .get('/api/accounts/' + username)
+                        .get('/api/apps/' + username)
                         .then(function(response) {
                             return response.data;
                         });
                     return promise;
                 },
-                removeAccount: function(account) {
+                removeApp: function(app) {
                     var promise = $http
-                        .delete('/api/accounts/'+account.username)
+                        .delete('/api/apps/'+app.username)
                         .then(function(response) {
                             return response.data;
                         });

@@ -3,6 +3,7 @@
 
     angular
         .module('shipyard', [
+                'shipyard.apps',
                 'shipyard.accounts',
                 'shipyard.core',
                 'shipyard.services',

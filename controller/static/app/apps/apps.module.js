@@ -2,7 +2,7 @@
 	'use strict';
 
 	angular
-		.module('shipyard.accounts', [
+		.module('shipyard.apps', [
                         'ngResource',
 			'ui.router',
 		]);

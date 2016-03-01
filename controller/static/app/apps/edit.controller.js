@@ -2,21 +2,21 @@
     'use strict';
 
     angular
-        .module('shipyard.accounts')
-        .controller('AccountsEditController', AccountsEditController);
+        .module('shipyard.apps')
+        .controller('AppsEditController', AppsEditController);
 
-    AccountsEditController.$inject = ['account','roles', '$http', '$state'];
-    function AccountsEditController(account, roles, $http, $state) {
+    AppsEditController.$inject = ['app','roles', '$http', '$state'];
+    function AppsEditController(app, roles, $http, $state) {
         var vm = this;
-        vm.account = account;
-        vm.editAccount = editAccount;
+        vm.app = app;
+        vm.editApp = editApp;
         vm.request = {};
         vm.password = null;
-        vm.firstName = account.first_name;
-        vm.lastName = account.last_name;
+        vm.firstName = app.first_name;
+        vm.lastName = app.last_name;
         vm.request = null;
         vm.roles = roles;
-        vm.userRoles = account.roles;
+        vm.userRoles = app.roles;
         vm.roleOptions = vm.roles;
         vm.roleConfig = {
             create: false,
@@ -31,21 +31,21 @@
             return $('.ui.form').form('validate form');
         }
 
-        function editAccount() {
+        function editApp() {
             if (!isValid()) {
                 return;
             }
             vm.request = {
-                username: account.username,
+                username: app.username,
                 password: vm.password,
                 first_name: vm.firstName,
                 last_name: vm.lastName,
                 roles: vm.userRoles
             }
             $http
-                .post('/api/accounts', vm.request)
+                .post('/api/apps', vm.request)
                 .success(function(data, status, headers, config) {
-                    $state.transitionTo('dashboard.accounts');
+                    $state.transitionTo('dashboard.apps');
                 })
             .error(function(data, status, headers, config) {
                 vm.error = data;

@@ -2,19 +2,17 @@
     'use strict';
 
     angular
-        .module('shipyard.accounts')
-        .controller('AccountsAddController', AccountsAddController);
+        .module('shipyard.apps')
+        .controller('AppsAddController', AppsAddController);
 
-    AccountsAddController.$inject = ['roles', '$http', '$state'];
-    function AccountsAddController(roles, $http, $state) {
+    AppsAddController.$inject = ['roles', '$http', '$state'];
+    function AppsAddController(roles, $http, $state) {
         var vm = this;
         vm.request = {};
-        vm.addAccount = addAccount;
-        vm.username = "";
-        vm.password = "";
-        vm.firstName = "";
-        vm.lastName = "";
-        vm.roleName = "user";
+        vm.addApp = addApp;
+        vm.appName = "";
+        vm.label = "";
+        vm.owner = "admin";
         vm.request = null;
         vm.roles = roles;
         vm.userRoles = null;
@@ -33,21 +31,19 @@
             return $('.ui.form').form('validate form');
         }
 
-        function addAccount() {
+        function addApp() {
             if (!isValid()) {
                 return;
             }
             vm.request = {
-                username: vm.username,
-                password: vm.password,
-                first_name: vm.firstName,
-                last_name: vm.lastName,
-                roles: vm.userRoles
+                appname: vm.appName,
+                label: vm.label,
+                owner: vm.owner
             }
             $http
-                .post('/api/accounts', vm.request)
+                .post('/api/apps', vm.request)
                 .success(function(data, status, headers, config) {
-                    $state.transitionTo('dashboard.accounts');
+                    $state.transitionTo('dashboard.apps');
                 })
             .error(function(data, status, headers, config) {
                 vm.error = data;
