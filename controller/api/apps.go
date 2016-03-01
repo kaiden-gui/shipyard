@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 	
 	"github.com/gorilla/mux"
 	"github.com/kaiden-gui/shipyard"
@@ -46,8 +47,10 @@ func (a *Api) addapp(w http.ResponseWriter, r *http.Request) {
 func (a *Api) removeapp(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	appid := vars["appid"]
+	owners := vars["owners"]
+	ow := strings.Split(owners,",")
 
-	if err := a.manager.RemoveApp(appid); err != nil {
+	if err := a.manager.RemoveApp(appid,ow); err != nil {
 		log.Errorf("error deleting app: %s", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

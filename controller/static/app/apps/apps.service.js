@@ -42,7 +42,7 @@
                 },
                 removeApp: function(app) {
                     var promise = $http
-                        .delete('/api/apps/'+app.username)
+                        .delete('/api/apps/'+app.id+'/'+app.owner)
                         .then(function(response) {
                             return response.data;
                         });

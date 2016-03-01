@@ -1,7 +1,7 @@
 <div id="remove-modal" class="ui small modal transition">
 <i class="close icon"></i>
 <div class="header">
-    Remove App: {{ vm.selectedApp.username }}
+    Remove App: {{ vm.selectedApp.appname }}
 </div>
 <div class="content">
     <p>Are you sure you want to remove this app?</p>
@@ -53,6 +53,7 @@
             <table class="ui sortable celled table" ng-show="vm.apps">
                 <thead>
                     <tr>
+                        <th>App Id</th>
                         <th>App Name</th>
                         <th>Label</th>
                         <th>Container Number</th>
@@ -62,10 +63,11 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="a in filteredApps = (vm.apps | filter:tableFilter)">
+                        <td>{{a.id | limitTo:8}}</td>
                         <td>{{a.appname}}</td>
                         <td>{{a.label}}</td>
                         <td>{{a.containernumber}}</td>
-                        <td><div ng-repeat="r in a.owner" class="ui horizontal label">{{r|roleDisplay}}</div></td>
+                        <td><div ng-repeat="r in a.owner" class="ui horizontal label">{{r}}</div></td>
                         <td class="collapsing">
                             <div ui-sref="dashboard.editApp({username: a.appName})" class="compact ui icon button">
                                 <i class="search icon"></i>
