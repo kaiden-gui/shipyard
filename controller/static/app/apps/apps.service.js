@@ -16,9 +16,9 @@
                         });
                     return promise;
                 },
-		roles: function() {
+		owners: function() {
                     var promise = $http
-                        .get('/api/roles')
+                        .get('/api/accounts')
                         .then(function(response) {
                             return response.data;
                         });

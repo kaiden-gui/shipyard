@@ -21,8 +21,8 @@
                                         $state.go('error');
                                     }); 
                                 }],
-                                roles: ['AppsService', '$state', '$stateParams', function (AppsService, $state, $stateParams) {
-                                    return AppsService.roles().then(null, function(errorData) {
+                                owners: ['AppsService', '$state', '$stateParams', function (AppsService, $state, $stateParams) {
+                                    return AppsService.owners().then(null, function(errorData) {
                                         $state.go('error');
                                     });
                                 }] 
@@ -35,8 +35,8 @@
                             controllerAs: 'vm',
                             authenticate: true,
                             resolve: {
-                                roles: ['AppsService', '$state', '$stateParams', function (AppsService, $state, $stateParams) {
-                                    return AppsService.roles().then(null, function(errorData) {
+                                owners: ['AppsService', '$state', '$stateParams', function (AppsService, $state, $stateParams) {
+                                    return AppsService.owners().then(null, function(errorData) {
                                         $state.go('error');
                                     });
                                 }] 
@@ -54,8 +54,8 @@
                                         $state.go('error');
                                     });
                                 }],
-                                roles: ['AppsService', '$state', '$stateParams', function (AppsService, $state, $stateParams) {
-                                    return AppsService.roles().then(null, function(errorData) {
+                                owners: ['AppsService', '$state', '$stateParams', function (AppsService, $state, $stateParams) {
+                                    return AppsService.owners().then(null, function(errorData) {
                                         $state.go('error');
                                     });
                                 }] 

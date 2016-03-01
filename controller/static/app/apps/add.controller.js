@@ -5,24 +5,23 @@
         .module('shipyard.apps')
         .controller('AppsAddController', AppsAddController);
 
-    AppsAddController.$inject = ['roles', '$http', '$state'];
-    function AppsAddController(roles, $http, $state) {
+    AppsAddController.$inject = ['owners', '$http', '$state'];
+    function AppsAddController(owners, $http, $state) {
         var vm = this;
         vm.request = {};
         vm.addApp = addApp;
         vm.appName = "";
         vm.label = "";
-        vm.owner = "admin";
         vm.request = null;
-        vm.roles = roles;
-        vm.userRoles = null;
-        vm.roleOptions = roles;
-        vm.roleConfig = {
+        vm.owner = null;
+        vm.owners = owners;
+        vm.ownerOptions = owners;
+        vm.ownerConfig = {
             create: false,
-            valueField: 'role_name',
-            labelField: 'description',
+            valueField: 'username',
+            labelField: 'username',
             delimiter: ',',
-            placeholder: 'Select Roles',
+            placeholder: 'Select Owners',
             onInitialize: function(selectize){
             },
         };

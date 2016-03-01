@@ -784,6 +784,34 @@ func (m DefaultManager) Registry(name string) (*shipyard.Registry, error) {
 func (m DefaultManager) Apps(username string) ([]*shipyard.App, error) {
 	apps := []*shipyard.App{}
 	log.Debugf("Apps username:%s", username)
+	if username == "admin" {
+		log.Debugf("admin user:%s", username)
+		accounts,err := m.Accounts()
+		log.Debugf("accounts:%s", accounts)
+		if err != nil {
+			return nil, err
+		}
+		for _,account := range accounts {
+			log.Debugf("account:%s", account)
+			for _,ap := range account.Apps{
+				var app *shipyard.App
+				re, err := r.Table(tblNameApps).Filter(map[string]string{"appname": ap}).Run(m.session)
+				if err != nil {
+					return nil, err
+				}       
+				log.Debugf("app:re data:%s",re)
+				for re.Next(&app){ 
+					if err != nil {
+						log.Errorf("Apps error :%s",err)
+						return nil, err
+					}       
+					apps = append(apps, app)
+				}       
+			}       
+			
+		}		
+		return apps, nil
+	}
         account,err := m.Account(username)
 	log.Debugf("app:acount data:%s",account)
         if err != nil {

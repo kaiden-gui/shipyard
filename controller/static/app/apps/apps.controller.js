@@ -5,8 +5,8 @@
 		.module('shipyard.apps')
 		.controller('AppsController', AppsController);
 
-	AppsController.$inject = ['apps', 'roles', 'AppsService', '$state', '$timeout'];
-	function AppsController(apps, roles, AppsService, $state, $timeout) {
+	AppsController.$inject = ['apps', 'owners', 'AppsService', '$state', '$timeout'];
+	function AppsController(apps, owners, AppsService, $state, $timeout) {
             var vm = this;
             vm.apps = apps;
             vm.refresh = refresh;
