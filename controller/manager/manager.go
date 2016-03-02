@@ -802,9 +802,9 @@ func (m DefaultManager) Apps(username string) ([]*shipyard.App, error) {
         if err != nil {
                  return nil, err
         }
-        for _,ap := range account.Apps{
+        for _,id := range account.Apps{
 		var app *shipyard.App
-		re, err := r.Table(tblNameApps).Filter(map[string]string{"appname": ap}).Run(m.session)
+		re, err := r.Table(tblNameApps).Get(id).Run(m.session)
 		if err != nil {
 			return nil, err
 		}

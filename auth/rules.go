@@ -128,7 +128,7 @@ func DefaultACLs() []*ACL {
 		Description: "Registries Read Only",
 		Rules: []*AccessRule{
 			{
-				Path:    "/api/registry",
+				Path:    "/api/registries",
 				Methods: []string{"GET"},
 			},
 		},
@@ -140,7 +140,7 @@ func DefaultACLs() []*ACL {
 		Description: "Registries",
 		Rules: []*AccessRule{
 			{
-				Path:    "/api/registry",
+				Path:    "/api/registries",
 				Methods: []string{"GET", "POST", "DELETE"},
 			},
 		},
@@ -154,6 +154,10 @@ func DefaultACLs() []*ACL {
 			{
 				Path:    "/api/apps",
 				Methods: []string{"GET", "POST", "DELETE"},
+			},
+			{
+				Path:    "/api/accounts",
+				Methods: []string{"GET"},
 			},
 		},
 	}
