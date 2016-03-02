@@ -28,19 +28,43 @@ func (a *Api) apps(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (a *Api) app(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	appid := vars["appid"]
+	
+	app, err := a.manager.App(appid)
+	log.Debugf("app:%s ", app)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if err := json.NewEncoder(w).Encode(app); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
 func (a *Api) addapp(w http.ResponseWriter, r *http.Request) {
 	var app *shipyard.App
 	if err := json.NewDecoder(r.Body).Decode(&app); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	if app.ID != "" {
+		if err := a.manager.UpdateApp(app); err != nil {
+			log.Errorf("error updating app: %s", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		
+	}else{
 
-	if err := a.manager.AddApp(app); err != nil {
-		log.Errorf("error saving app: %s", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		if err := a.manager.AddApp(app); err != nil {
+			log.Errorf("error saving app: %s", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
-
 	log.Infof("added app: name=%s", app.Name)
 	w.WriteHeader(http.StatusNoContent)
 }

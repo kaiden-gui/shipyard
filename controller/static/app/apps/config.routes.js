@@ -43,14 +43,14 @@
                             }
                         })
                         .state('dashboard.editApp', {
-                            url: '^/apps/edit/{username}',
+                            url: '^/apps/edit/{id}',
                             templateUrl: 'app/apps/edit.html',
                             controller: 'AppsEditController',
                             controllerAs: 'vm',
                             authenticate: true,
                             resolve: {
                                 app: ['AppsService', '$state', '$stateParams', function (AppsService, $state, $stateParams) {
-                                    return AppsService.getApp($stateParams.username).then(null, function(errorData) {
+                                    return AppsService.getApp($stateParams.id).then(null, function(errorData) {
                                         $state.go('error');
                                     });
                                 }],

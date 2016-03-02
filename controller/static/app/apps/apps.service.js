@@ -32,9 +32,9 @@
                         });
                     return promise;
                 },
-                getApp: function(username) {
+                getApp: function(id) {
                     var promise = $http
-                        .get('/api/apps/' + username)
+                        .get('/api/apps/' + id)
                         .then(function(response) {
                             return response.data;
                         });
@@ -42,7 +42,7 @@
                 },
                 removeApp: function(app) {
                     var promise = $http
-                        .delete('/api/apps/'+app.id+'/'+app.owner)
+                        .delete('/api/apps/'+app.id+'/'+app.owners)
                         .then(function(response) {
                             return response.data;
                         });

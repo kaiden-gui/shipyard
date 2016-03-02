@@ -125,6 +125,7 @@ func (a *Api) Run() error {
 	apiRouter.HandleFunc("/api/nodes/{name}", a.node).Methods("GET")
 	apiRouter.HandleFunc("/api/apps", a.apps).Methods("GET")
 	apiRouter.HandleFunc("/api/apps", a.addapp).Methods("POST")
+	apiRouter.HandleFunc("/api/apps/{appid}", a.app).Methods("GET")
 	apiRouter.HandleFunc("/api/apps/{appid}/{owners}", a.removeapp).Methods("DELETE")
 	apiRouter.HandleFunc("/api/containers/{id}/scale", a.scaleContainer).Methods("POST")
 	apiRouter.HandleFunc("/api/events", a.events).Methods("GET")

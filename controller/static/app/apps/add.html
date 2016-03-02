@@ -12,9 +12,9 @@
                 <div class="field">
                     <input type="text" name="label" ng-model="vm.label">
                 </div>
-                <label>Owner</label>
+                <label>Owners</label>
                 <div class="field">
-                    <selectize options="vm.ownerOptions" ng-model="vm.owner" config="vm.ownerConfig"></selectize>
+                    <selectize options="vm.ownerOptions" ng-model="vm.owners" config="vm.ownerConfig"></selectize>
                 </div>
                 <div class="ui hidden divider"></div>
                 <div class="ui green submit button">Add App</div>
@@ -30,7 +30,7 @@ $(function(){
             onSuccess: function() {
                 vm.addApp();
             },
-            username: {
+            appname: {
                 identifier : 'appName',
                 rules: [
                 {
@@ -39,7 +39,7 @@ $(function(){
                 }
                 ]
             },
-            firstName: {
+            label: {
                 identifier : 'label',
                 rules: [
                 {

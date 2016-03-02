@@ -104,9 +104,11 @@ type (
 		Nodes() ([]*shipyard.Node, error)
 		Node(name string) (*shipyard.Node, error)
 
-		AddApp(app *shipyard.App) error
-		RemoveApp(appid string, owner []string) error
 		Apps(username string) ([]*shipyard.App, error)
+		App(appid string) (*shipyard.App, error)
+		AddApp(app *shipyard.App) error
+		UpdateApp(app *shipyard.App) error
+		RemoveApp(appid string, owners []string) error
 
 		AddRegistry(registry *shipyard.Registry) error
 		RemoveRegistry(registry *shipyard.Registry) error
@@ -786,31 +788,6 @@ func (m DefaultManager) Apps(username string) ([]*shipyard.App, error) {
 	log.Debugf("Apps username:%s", username)
 	if username == "admin" {
 		log.Debugf("admin user:%s", username)
-		/*accounts,err := m.Accounts()
-		log.Debugf("accounts:%s", accounts)
-		if err != nil {
-			return nil, err
-		}
-		for _,account := range accounts {
-			log.Debugf("account:%s", account)
-			for _,ap := range account.Apps{
-				var app *shipyard.App
-				re, err := r.Table(tblNameApps).Filter(map[string]string{"appname": ap}).Run(m.session)
-				if err != nil {
-					return nil, err
-				}       
-				log.Debugf("app:re data:%s",re)
-				for re.Next(&app){ 
-					if err != nil {
-						log.Errorf("Apps error :%s",err)
-						return nil, err
-					}       
-					apps = append(apps, app)
-				}       
-			}       
-			
-		}*/		
-	
 		res, err := r.Table(tblNameApps).OrderBy(r.Asc("appname")).Run(m.session)
 		if err != nil {
 			return nil, err
@@ -844,7 +821,23 @@ func (m DefaultManager) Apps(username string) ([]*shipyard.App, error) {
 	return apps, nil
 }
 
+func (m DefaultManager) App(appid string) (*shipyard.App, error) {
+	var app *shipyard.App
+	res, err := r.Table(tblNameApps).Get(appid).Run(m.session)
+	log.Debugf("app data",res)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := res.One(&app); err != nil {
+			return nil, err
+	}
+	
+	return app, nil
+}
+
 func (m DefaultManager) AddApp(app *shipyard.App) error {
+	log.Debugf("Insert app: %s",app)
 	result, err := r.Table(tblNameApps).Insert(app).RunWrite(m.session)
 	if err != nil {
 		return err
@@ -853,7 +846,35 @@ func (m DefaultManager) AddApp(app *shipyard.App) error {
 	m.logEvent("add-app", fmt.Sprintf("name=%s label=%s", app.Name, app.Label), []string{"app"})
 	app.ID = result.GeneratedKeys[0]
 
-	for _, owner := range app.Owner {
+	for _, owner := range app.Owners {
+        	account,err := m.Account(owner)
+		if err != nil {
+                        return err
+                }
+		account.Apps = append(account.Apps, app.ID)
+		log.Debugf("AddApp account.Apps data: %s",account.Apps)
+		if _, err := r.Table(tblNameAccounts).Filter(map[string]string{"username": account.Username}).Update(account).RunWrite(m.session); err != nil {
+			return err
+		}
+	}
+	
+	return nil
+}
+func (m DefaultManager) UpdateApp(app *shipyard.App) error {
+	updates := map[string]interface{}{
+		"appname":   app.Name,
+		"label":  app.Label,
+		"owners":  app.Owners,
+	}
+
+	result, err := r.Table(tblNameApps).Get(app.ID).Update(updates).RunWrite(m.session)
+	if err != nil {
+		return err
+	}
+	log.Debugf("Update result: %s",result)
+	m.logEvent("update-app", fmt.Sprintf("name=%s label=%s", app.Name, app.Label), []string{"app"})
+
+	for _, owner := range app.Owners {
         	account,err := m.Account(owner)
 		if err != nil {
                         return err
@@ -868,19 +889,21 @@ func (m DefaultManager) AddApp(app *shipyard.App) error {
 	return nil
 }
 func (m DefaultManager) RemoveApp(appid string, owners []string) error {
-	for _, owner := range owners {
-        	account,err := m.Account(owner)
-		if err != nil {
-                        return err
-                }
-		for i, ap := range account.Apps {
-			if ap == appid {
-				account.Apps = append(account.Apps[:i],account.Apps[i+1:]...)
-				break
+	if owners[0] != "undefined" {
+		for _, owner := range owners {
+			account,err := m.Account(owner)
+			if err != nil {
+				return err
 			}
-		}
-		if _, err := r.Table(tblNameAccounts).Filter(map[string]string{"username": account.Username}).Update(account).RunWrite(m.session); err != nil {
-			return err
+			for i, ap := range account.Apps {
+				if ap == appid {
+					account.Apps = append(account.Apps[:i],account.Apps[i+1:]...)
+					break
+				}
+			}
+			if _, err := r.Table(tblNameAccounts).Filter(map[string]string{"username": account.Username}).Update(account).RunWrite(m.session); err != nil {
+				return err
+			}
 		}
 	}
 	res, err := r.Table(tblNameApps).Get(appid).Delete().Run(m.session)

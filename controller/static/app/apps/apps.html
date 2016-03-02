@@ -57,8 +57,8 @@
                         <th>App Name</th>
                         <th>Label</th>
                         <th>Container Number</th>
-                        <th>Owner</th>
-                        <th></th>
+                        <th>Owners</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -67,10 +67,13 @@
                         <td>{{a.appname}}</td>
                         <td>{{a.label}}</td>
                         <td>{{a.containernumber}}</td>
-                        <td><div ng-repeat="r in a.owner" class="ui horizontal label">{{r}}</div></td>
+                        <td><div ng-repeat="r in a.owners" class="ui horizontal label">{{r}}</div></td>
                         <td class="collapsing">
-                            <div ui-sref="dashboard.editApp({username: a.appName})" class="compact ui icon button">
+                            <div ui-sref="dashboard.editApp({username: a.appname})" class="compact green ui icon button">
                                 <i class="search icon"></i>
+                            </div>
+			    <div ui-sref="dashboard.editApp({id: a.id})" class="compact blue ui icon button">
+                                    <i class="wrench icon"></i>
                             </div>
                             <div ng-click="vm.showRemoveAppDialog(a)" class="compact ui icon button red">
                                 <i class="trash icon"></i>

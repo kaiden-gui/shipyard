@@ -13,8 +13,8 @@
         vm.appName = "";
         vm.label = "";
         vm.request = null;
-        vm.owner = null;
-        vm.owners = owners;
+        vm.owners = null;
+        vm.allOwners = owners;
         vm.ownerOptions = owners;
         vm.ownerConfig = {
             create: false,
@@ -37,7 +37,7 @@
             vm.request = {
                 appname: vm.appName,
                 label: vm.label,
-                owner: vm.owner
+                owners: vm.owners
             }
             $http
                 .post('/api/apps', vm.request)

@@ -4,21 +4,17 @@
         <div class="ui segment">
             <div class="ui form" ng-submit="vm.editApp()" ng-method="post">
                 <h4 class="ui dividing header">App Details</h4>
-                <label>First Name</label>
+                <label>App Name</label>
                 <div class="field">
-                    <input type="text" name="firstName" ng-model="vm.firstName">
+                    <input type="text" name="appName" ng-model="vm.appName">
                 </div>
-                <label>Last Name</label>
+                <label>Label</label>
                 <div class="field">
-                    <input type="text" name="lastName" ng-model="vm.lastName">
+                    <input type="text" name="label" ng-model="vm.label">
                 </div>
-                <label>Password</label>
+                <label>Owners</label>
                 <div class="field">
-                    <input type="password" name="password" ng-model="vm.password">
-                </div>
-                <label>Roles</label>
-                <div class="field">
-                    <selectize options="vm.roleOptions" ng-model="vm.userRoles" config="vm.roleConfig"></selectize>
+                    <selectize options="vm.ownerOptions" ng-model="vm.appOwners" config="vm.ownerConfig"></selectize>
                 </div>
                 <div class="ui hidden divider"></div>
                 <div class="ui green submit button">Update App</div>
@@ -34,21 +30,21 @@ $(function(){
             onSuccess: function() {
                 vm.editApp();
             },
-            firstName: {
-                identifier : 'firstName',
+            appName: {
+                identifier : 'appName',
                 rules: [
                 {
                     type   : 'empty',
-                    prompt : 'Please enter a first name'
+                    prompt : 'Please enter a app name'
                 }
                 ]
             },
-            lastName: {
-                identifier : 'lastName',
+            label: {
+                identifier : 'label',
                 rules: [
                 {
                     type   : 'empty',
-                    prompt : 'Please enter a last name'
+                    prompt : 'Please enter a label'
                 }
                 ]
             }

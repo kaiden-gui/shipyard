@@ -5,26 +5,25 @@
         .module('shipyard.apps')
         .controller('AppsEditController', AppsEditController);
 
-    AppsEditController.$inject = ['app','roles', '$http', '$state'];
-    function AppsEditController(app, roles, $http, $state) {
+    AppsEditController.$inject = ['app','owners', '$http', '$state'];
+    function AppsEditController(app, owners, $http, $state) {
         var vm = this;
         vm.app = app;
         vm.editApp = editApp;
         vm.request = {};
-        vm.password = null;
-        vm.firstName = app.first_name;
-        vm.lastName = app.last_name;
+        vm.appName = app.appname;
+        vm.label = app.label;
         vm.request = null;
-        vm.roles = roles;
-        vm.userRoles = app.roles;
-        vm.roleOptions = vm.roles;
-        vm.roleConfig = {
+        vm.owners = owners;
+        vm.appOwners = app.owner;
+        vm.ownerOptions = vm.owners;
+        vm.ownerConfig = {
             create: false,
-            valueField: 'role_name',
-            labelField: 'description',
+            valueField: 'username',
+            labelField: 'username',
             delimiter: ',',
-            items: vm.userRoles,
-            placeholder: 'Select Roles'
+            items: vm.owners,
+            placeholder: 'Select Owners'
         };
 
         function isValid() {
@@ -36,11 +35,10 @@
                 return;
             }
             vm.request = {
-                username: app.username,
-                password: vm.password,
-                first_name: vm.firstName,
-                last_name: vm.lastName,
-                roles: vm.userRoles
+                id: app.id,
+                appname: vm.appName,
+                label: vm.label,
+                owners: vm.appOwners
             }
             $http
                 .post('/api/apps', vm.request)
