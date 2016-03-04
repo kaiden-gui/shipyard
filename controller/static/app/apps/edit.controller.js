@@ -15,7 +15,7 @@
         vm.label = app.label;
         vm.request = null;
         vm.owners = owners;
-        vm.appOwners = app.owner;
+        vm.appOwners = app.owners;
         vm.ownerOptions = vm.owners;
         vm.ownerConfig = {
             create: false,
