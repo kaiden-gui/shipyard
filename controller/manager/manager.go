@@ -2,13 +2,14 @@ package manager
 
 import (
 	//"bytes"
-	//"encoding/json"
+	"encoding/json"
 	"errors"
 	"fmt"
 	//"net"
 	"net/http"
 	"strings"
 	"time"
+	"io/ioutil"
 
 	log "github.com/Sirupsen/logrus"
 	r "github.com/dancannon/gorethink"
@@ -18,6 +19,7 @@ import (
 	"github.com/kaiden-gui/shipyard/auth"
 	"github.com/kaiden-gui/shipyard/dockerhub"
 	//"github.com/kaiden-gui/shipyard/version"
+
 )
 
 const (
@@ -104,7 +106,7 @@ type (
 		Nodes() ([]*shipyard.Node, error)
 		Node(name string) (*shipyard.Node, error)
 
-		Apps(username string) ([]*shipyard.App, error)
+		Apps(username string, durl string) ([]*shipyard.App, error)
 		App(appid string) (*shipyard.App, error)
 		AddApp(app *shipyard.App) error
 		UpdateApp(app *shipyard.App) error
@@ -783,7 +785,7 @@ func (m DefaultManager) Registry(name string) (*shipyard.Registry, error) {
 	return registry, nil
 }
 
-func (m DefaultManager) Apps(username string) ([]*shipyard.App, error) {
+func (m DefaultManager) Apps(username string,durl string) ([]*shipyard.App, error) {
 	apps := []*shipyard.App{}
 	log.Debugf("Apps username:%s", username)
 	if username == "admin" {
@@ -793,7 +795,36 @@ func (m DefaultManager) Apps(username string) ([]*shipyard.App, error) {
 			return nil, err
 		}
 		if err := res.All(&apps); err != nil {
+			log.Errorf("res Error:%s", err)
 			return nil, err
+		}
+		for _,app := range apps {
+			label := app.Label
+			log.Debugf("label :%s", label)
+			url := durl+"/containers/json?all=1&filters={%22label%22:[%22appname="+label+"%22]}"
+			log.Debugf("url :%s", url)
+			resp, err := http.Get(url)
+			body, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			log.Debugf("label resp :%s", body)
+			if body != nil {
+				var i int
+				type container struct{
+					ID    string   `json:"id,omitempty" gorethink:"id,omitempty"`
+				}
+				containers := &[]container{}
+				if err := json.Unmarshal(body, &containers); err != nil {
+					log.Errorf("repo err data:%s",err)
+					return nil, err
+				}
+				for range *containers {
+					i = i+1
+				}
+				log.Debugf("body len :%s", i )
+				app.ContainerNumber = i
+			}
 		}
 		return apps, nil
 	}

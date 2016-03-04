@@ -25,7 +25,8 @@
                                     return AppsService.owners().then(null, function(errorData) {
                                         $state.go('error');
                                     });
-                                }] 
+                                }]
+	
                             }
 			})
                         .state('dashboard.addApp', {

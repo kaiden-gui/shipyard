@@ -4,6 +4,7 @@
     angular
         .module('shipyard', [
                 'shipyard.apps',
+                'shipyard.appscontainers',
                 'shipyard.accounts',
                 'shipyard.core',
                 'shipyard.services',

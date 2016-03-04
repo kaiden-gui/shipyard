@@ -69,7 +69,7 @@
                         <td>{{a.containernumber}}</td>
                         <td><div ng-repeat="r in a.owners" class="ui horizontal label">{{r}}</div></td>
                         <td class="collapsing">
-                            <div ui-sref="dashboard.editApp({username: a.appname})" class="compact green ui icon button">
+                            <div ui-sref="dashboard.appscontainers({label: a.label})" class="compact green ui icon button">
                                 <i class="search icon"></i>
                             </div>
 			    <div ui-sref="dashboard.editApp({id: a.id})" class="compact blue ui icon button">

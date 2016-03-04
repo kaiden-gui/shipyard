@@ -16,7 +16,7 @@ func (a *Api) apps(w http.ResponseWriter, r *http.Request) {
 	session, _ := a.manager.Store().Get(r, a.manager.StoreKey())
 	username := session.Values["username"].(string)
 	log.Debugf("apps username:%s", username)
-	apps, err := a.manager.Apps(username)
+	apps, err := a.manager.Apps(username,a.dUrl)
 	log.Debugf("apps:%s ", apps)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
